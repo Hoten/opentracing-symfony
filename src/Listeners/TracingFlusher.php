@@ -1,0 +1,43 @@
+<?php
+
+namespace Hoten\OpenTracingBundle\Listeners;
+
+use OpenTracing\Tracer;
+use Hoten\OpenTracingBundle\Events\TracingTerminated;
+use Exception;
+use Psr\Log\LoggerInterface;
+
+final class TracingFlusher
+{
+    const MAX_NUMBER_OF_ATTEMPTS = 3;
+
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function notify(TracingTerminated $event)
+    {
+        $tracer = $event->tracer();
+
+        $this->flushTraces($tracer, self::MAX_NUMBER_OF_ATTEMPTS);
+    }
+
+    private function flushTraces(Tracer $tracer, $numberOfAttempts)
+    {
+        try {
+            $tracer->flush();
+        } catch (Exception $e) {
+            if ($numberOfAttempts == 1) {
+                $this->logger->error($e->getMessage());
+                return;
+            }
+
+            usleep((self::MAX_NUMBER_OF_ATTEMPTS - $numberOfAttempts) * 1000);
+
+            $this->flushTraces($tracer, $numberOfAttempts - 1);
+        }
+    }
+}

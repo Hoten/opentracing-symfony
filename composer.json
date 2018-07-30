@@ -1,0 +1,31 @@
+{
+  "name": "hoten/opentracing",
+  "homepage": "https://github.com/hoten/opentracing-symfony",
+  "description": "OpenTracing in Symfony",
+  "keywords": [
+    "symfony",
+    "opentracing"
+  ],
+  "type": "symfony-bundle",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Connor Clark",
+      "email": "cjamcl@gmail.com"
+    }
+  ],
+  "require": {
+    "datadog/dd-trace": "^0.1.0",
+    "opentracing/opentracing": "1.0.0-beta5",
+    "symfony/config": "~2.7|~3.0",
+    "symfony/dependency-injection": "~2.7|~3.0",
+    "symfony/http-kernel": "~2.7|~3.0",
+    "simple-bus/symfony-bridge": "^5.1",
+    "guzzlehttp/guzzle": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Hoten\\OpenTracingBundle\\": "src"
+    }
+  }
+}
