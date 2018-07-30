@@ -10,3 +10,5 @@ rm -rf src/Proto/Hoten
 
 sed -i '' -e 's/GPBMetadata/Hoten\\OpenTracingBundle\\Proto\\GPBMetadata/g' src/Proto/GPBMetadata/Collector.php
 sed -i '' -e 's/GPBMetadata/Hoten\\OpenTracingBundle\\Proto\\GPBMetadata/g' src/Proto/CollectPacket.php
+sed -i '' -e 's/GPBMetadata/Hoten\\OpenTracingBundle\\Proto\\GPBMetadata/g' src/Proto/CollectPacket_Annotation.php
+sed -i '' -e 's/GPBMetadata/Hoten\\OpenTracingBundle\\Proto\\GPBMetadata/g' src/Proto/CollectPacket_SpanID.php

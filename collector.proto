@@ -1,4 +1,4 @@
-syntax = "proto2";
+syntax = "proto3";
 
 package Hoten.OpenTracingBundle.Proto;
 
@@ -7,26 +7,30 @@ package Hoten.OpenTracingBundle.Proto;
 message CollectPacket {
   // SpanID is the group of information which can uniquely identify the exact
   // span being collected.
-  required group SpanID = 1 {
+  message SpanID {
     // trace is the root ID of the tree that contains all of the spans
     // related to this one.
-    required fixed64 trace = 2;
+    fixed64 trace = 1;
 
     // span is an ID that probabilistically uniquely identifies this span.
-    required fixed64 span = 3;
+    fixed64 span = 2;
 
     // parent is the ID of the parent span, if any.
-    optional fixed64 parent = 4;
+    fixed64 parent = 3;
   }
 
+  SpanID span = 1;
+
   // Annotation is any number of annotations for the span to be collected.
-  repeated group Annotation = 5 {
+  message Annotation {
     // key is the annotation's key.
-    required string key = 6;
+    string key = 1;
 
     // value is the annotation's value, which may be either human or
     // machine readable, depending on the schema of the event that
     // generated it.
-    optional bytes value = 7;
+    bytes value = 2;
   }
+
+  repeated Annotation annotation = 2;
 }

@@ -51,9 +51,7 @@ class TcpTransport implements Transport
             $this->logger->debug(sprintf('%s (%d)', $errstr, $errno));
             echo("$errstr ($errno)<br />\n");
         } else {
-            echo("lets try tcp $host $port\n");
-            echo(strlen($data) . "\n");
-            $this->fwrite_stream($fp, "$data\0");
+            $this->fwrite_stream($fp, $data);
             while (!feof($fp)) {
                 echo fgets($fp, 128);
             }
