@@ -27,5 +27,7 @@
     "psr-4": {
       "Hoten\\OpenTracingBundle\\": "src"
     }
+  },
+  "require-dev": {
   }
 }

@@ -58,10 +58,12 @@ class TracingStarter
             $span = $this->tracer->startSpan($operationName);
         }
 
-        // is this useful?
-        $span->setTag('env', $this->env);
+        if ($span) {
+            // is this useful?
+            $span->setTag('env', $this->env);
 
-        $this->subscribeToFinishEvent($span);
+            $this->subscribeToFinishEvent($span);
+        }
     }
 
     private function extractContextFromRequest(Request $request)

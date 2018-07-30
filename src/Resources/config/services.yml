@@ -1,63 +1,71 @@
 services:
-  opentracing.event_bus:
+  open_tracing.event_bus:
     alias: event_bus
 
-  opentracing.logger:
+  open_tracing.logger:
     alias: logger
 
-  opentracing.encoder:
-    class: "%opentracing.encoder%"
+  open_tracing.encoder:
+    class: "%open_tracing.encoder%"
 
-  opentracing.transport.http:
+  open_tracing.transport.http:
     class: DDTrace\Transport\Http
     arguments:
-      - "@opentracing.encoder"
-      - "@opentracing.logger"
-      - endpoint: "%opentracing.endpoint%"
+      - "@open_tracing.encoder"
+      - "@open_tracing.logger"
+      - endpoint: "%open_tracing.endpoint%"
 
-  opentracing.transport.noop:
+  open_tracing.transport.tcp:
+    class: Hoten\OpenTracingBundle\Transport\TcpTransport
+    arguments:
+      - "@open_tracing.encoder"
+      - "@open_tracing.logger"
+      - host: "%open_tracing.host%"
+        port: "%open_tracing.port%"
+
+  open_tracing.transport.noop:
     class: DDTrace\Transport\Noop
 
-  opentracing.tracing_starter:
+  open_tracing.tracing_starter:
     class: Hoten\OpenTracingBundle\Listeners\TracingStarter
     arguments:
       - "@event_dispatcher"
-      - "@opentracing.tracer"
+      - "@open_tracing.tracer"
       - "%kernel.environment%"
     tags:
       - { name: kernel.event_listener, event: kernel.controller }
 
-  opentracing.tracing_terminator:
+  open_tracing.tracing_terminator:
     class: Hoten\OpenTracingBundle\Listeners\TracingTerminator
     arguments:
-      - "@opentracing.tracer"
-      - "@opentracing.event_bus"
+      - "@open_tracing.tracer"
+      - "@open_tracing.event_bus"
     tags:
       - { name: kernel.event_listener, event: kernel.terminate, priority: -1000 }
       - { name: kernel.event_listener, event: kernel.exception, priority: -1000 }
 
-  opentracing.tracer_factory:
+  open_tracing.tracer_factory:
     class: Hoten\OpenTracingBundle\Tracers\TracerFactory
 
-  opentracing.tracer:
+  open_tracing.tracer:
     class: OpenTracing\Tracer
     public: true
-    factory: ["@opentracing.tracer_factory", "build"]
+    factory: ["@open_tracing.tracer_factory", "build"]
     arguments:
-      - "%opentracing.enabled%"
-      - "%opentracing.sample%"
-      - "@opentracing.transport"
+      - "%open_tracing.enabled%"
+      - "%open_tracing.sample%"
+      - "@open_tracing.transport"
 
-  opentracing.listener.tracer_flusher:
+  open_tracing.listener.tracer_flusher:
     class: Hoten\OpenTracingBundle\Listeners\TracingFlusher
     arguments:
-      - "@opentracing.logger"
+      - "@open_tracing.logger"
     tags:
         - { name: event_subscriber, subscribes_to: Hoten\OpenTracingBundle\Events\TracingTerminated }
 
-  opentracing.http_client_provider:
+  open_tracing.http_client_provider:
     class: Hoten\OpenTracingBundle\Service\HttpClientProvider
     arguments:
-      - "@opentracing.tracer"
-      - "%opentracing.format%"
+      - "@open_tracing.tracer"
+      - "%open_tracing.format%"
         
